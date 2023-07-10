@@ -1,13 +1,55 @@
+#pragma once
 #include <iostream>
-#include "Car.hpp"
+#include <string>
+#include <memory>
+#include "Engine.hpp"
+#include "Wheel.hpp"
+#include "Brake.hpp"
+#include "Transmission.hpp"
+#include "Accelerator.hpp"
 using namespace std;
 
-int main()
+class Car
 {
-    Car myCar("volkswagen", "passat", 2023, 225);
-    myCar.printParts();
+    private:
+        shared_ptr<Engine> engine_;
+        shared_ptr<Wheel> wheels_[4];
+        shared_ptr<Brake> brakes_[4];
+        shared_ptr<Transmission> transmission_;
+        shared_ptr<Accelerator> accelerator_;
 
-    Car newCar = myCar;
+        string make;
+        string model;
+        int year;
+        int topSpeed;
 
-    return 0;
-}
+    public:
+        Car(string make_, string model_, int year_, int topSpeed_)
+        : make(make_), model(model_), year(year_), topSpeed(topSpeed_)
+        {
+            engine_ = make_shared<Engine>();
+            for(int i=0; i<4; i++)
+                wheels_[i] = make_shared<Wheel>();
+            for(int i=0; i<4; i++)
+                brakes_[i] = make_shared<Brake>();
+            transmission_ = make_shared<Transmission>();
+            accelerator_ = make_shared<Accelerator>();
+        }
+        
+        void printParts()
+        {
+            engine_->print();
+            for (int i=0; i<4; i++)
+            {
+                wheels_[i]->print();
+                brakes_[i]->print();
+            }
+            transmission_->print();
+            accelerator_->print();
+
+            cout << "Car Info: " << make << ' ' <<
+            model << ' ' << year << ' ' << topSpeed << endl;
+        }
+        
+        ~Car(){}
+};
